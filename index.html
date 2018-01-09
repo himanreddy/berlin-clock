@@ -1,0 +1,172 @@
+<html>
+    <head>
+        <title>Berlin Clock</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+        <style>
+            #secondsCircle {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                background-color: white;
+                border: 2px solid #dcdcdc;
+                margin-bottom: 10px;
+            }
+
+            .fmblock {
+                width: 12px !important;
+            }
+
+            .fhblock, .ohblock, .fmblock, .omblock {
+                height: 30px;
+                width: 41px;
+                display: inline-block;
+                border: 2px solid #dcdcdc;
+                border-radius: 5px;
+            }
+
+            .yellow-second {
+                background-color: #FFEB3B !important;
+            }
+
+            .yellow-back {
+                background-color: #FFEB3B !important;
+            }
+
+            .red-back {
+                background-color: #F44336 !important;
+            }
+
+            
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="text-center mt-5">Berlick Clock</h1>
+            <div class="card my-5 mx-5 p-5">
+                <div class="text-center mx-auto">
+                    <div id="secondsCircle"></div>
+                </div>
+
+                <div id="fiveHourBlocks" class="text-center">
+                    <div id="fhblock1" class="fhblock"></div>
+                    <div id="fhblock2" class="fhblock"></div>
+                    <div id="fhblock3" class="fhblock"></div>
+                    <div id="fhblock4" class="fhblock"></div>
+                </div>
+
+                <div id="oneHourBlocks" class="text-center">
+                    <div id="ohblock1" class="ohblock"></div>
+                    <div id="ohblock2" class="ohblock"></div>
+                    <div id="ohblock3" class="ohblock"></div>
+                    <div id="ohblock4" class="ohblock"></div>
+                </div>
+
+                <div id="fiveMinuteBlock" class="text-center">
+                    <div id="fmblock1" class="fmblock"></div>
+                    <div id="fmblock2" class="fmblock"></div>
+                    <div id="fmblock3" class="fmblock"></div>
+                    <div id="fmblock4" class="fmblock"></div>
+                    <div id="fmblock5" class="fmblock"></div>
+                    <div id="fmblock6" class="fmblock"></div>
+                    <div id="fmblock7" class="fmblock"></div>
+                    <div id="fmblock8" class="fmblock"></div>
+                    <div id="fmblock9" class="fmblock"></div>
+                    <div id="fmblock10" class="fmblock"></div>
+                    <div id="fmblock11" class="fmblock"></div>
+                </div>
+
+                <div id="oneMinuteBlock" class="text-center">
+                    <div id="omblock1" class="omblock"></div>
+                    <div id="omblock2" class="omblock"></div>
+                    <div id="omblock3" class="omblock"></div>
+                    <div id="omblock4" class="omblock"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var BClock = {	
+                updateSeconds: function(second){
+                    var secondsDiv = document.getElementsByClassName("yellow-second");
+                    var ele;
+                    if(secondsDiv.length > 0) {
+                        ele = secondsDiv[0];
+                    } else {
+                        ele = document.getElementById("secondsCircle");
+                    }
+
+                    if(second%2 === 0) {
+                        ele.classList.add("yellow-second");
+                    } else {
+                        ele.classList.remove("yellow-second");
+                    }
+                },
+                updateMinutes: function (minutes) {
+                    var fillBlocks = Math.floor(minutes/5);
+                    if(fillBlocks === 0) {
+                        for(var i = 1; i <= 11; j++) {
+                            if(i%3 === 0) {
+                                document.getElementById("fmblock"+i).classList.remove("red-back");
+                            } else {
+                                document.getElementById("fmblock"+i).classList.remove("yellow-back");
+                            }
+                        }
+                    }
+                    for(var i = 1; i <= fillBlocks; i++) {
+                        if(i%3 === 0) {
+                            document.getElementById("fmblock"+i).classList.add("red-back");
+                        } else {
+                            document.getElementById("fmblock"+i).classList.add("yellow-back");
+                        }
+                    }
+
+                    var fillBlocksO = minutes % 5;
+
+                    if(fillBlocksO > 0) {
+                        for(var j = 1; j <= fillBlocksO; j++) {
+                            document.getElementById("omblock"+j).classList.add("yellow-back");
+                        }
+                    } else {
+                        for(var j = 1; j <= 4; j++) {
+                            document.getElementById("omblock"+j).classList.remove("yellow-back");
+                        }
+                    }
+                },
+                updateHours: function(hours) {
+                    var fillBlocks = Math.floor(hours/5);
+                    if(hours === 0) {
+                        for(var i = 1; i <= fillBlocks; i++) {
+                            document.getElementById("fhblock"+i).classList.remove("red-back");
+                        }
+                    }
+                    for(var i = 1; i <= fillBlocks; i++) {
+                        document.getElementById("fhblock"+i).classList.add("red-back");
+                    }
+
+                    var fillBlocksO = hours % 5;
+
+                    if(fillBlocksO > 0) {
+                        for(var j = 1; j <= fillBlocksO; j++) {
+                            document.getElementById("ohblock"+j).classList.add("red-back");
+                        }
+                    } else {
+                        for(var j = 1; j <= 4; j++) {
+                            document.getElementById("ohblock"+j).classList.remove("red-back");
+                        }
+                    }
+                },
+                tick: function(){
+                    var time = new Date();
+                    var second = time.getSeconds();
+                    var minute = time.getMinutes();
+                    var hour = time.getHours();
+                    BClock.updateSeconds(second);
+                    BClock.updateMinutes(minute);
+                    BClock.updateHours(hour);
+                }
+            }
+
+            setInterval(BClock.tick, 1000);
+        </script>
+    </body>
+</html>
